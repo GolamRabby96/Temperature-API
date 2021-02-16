@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Temperature API</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/b.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+        .dis {
+            text-align: center;
+            color: gold;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input id="input" type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button id="button" type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </form>
+        <h3 id="errorMessage" class="dis"></h3>
+        <div id="errorHide" class="weather-status text-white text-center">
+            <img src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
+            <h1 id="city">City</h1>
+            <h3><span id="temperature">Temperature</span>&deg;C</h3>
+            <h1 id="situation" class="lead"></h1>
+            
+        </div>
+    </div>
+    <!-- ..............................  -->
+    <script>
+        const input = document.getElementById('input');
+        const button = document.getElementById('button');
+        const city = document.getElementById('city');
+        const temperature = document.getElementById('temperature');
+        const situation = document.getElementById('situation')
+
+        button.addEventListener('click', function(){
+
+            document.getElementById('errorHide').style.display='block';
+            document.getElementById('errorMessage').innerText="";
+            fetch("http://api.openweathermap.org/data/2.5/weather?q="+input.value+"&units=metric&appid=eea838800185080a46e85e139cd7464b")
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+                const name = data.name;
+                const tem = data.main.temp;
+                const cloud = data.weather[0].main;
+
+                city.innerText = name;  
+                temperature.innerText = tem;
+                situation.innerText = cloud;
+                input.value='';
+            })
+            .catch(error => {
+                input.value='';
+                document.getElementById('errorHide').style.display='none';
+                document.getElementById('errorMessage').innerText="City Not Found try again";
+            })
+        })
+    </script>
+
+</body>
+
+</html>
